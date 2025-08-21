@@ -1,4 +1,4 @@
-name: Cypress CI
+name: API Tests CI
 
 on:
   push:
@@ -9,20 +9,28 @@ on:
       - main
 
 jobs:
-  test:
+  api-tests:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repository
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
+      # Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Run Cypress tests
-        run: npx cypress run
+      # Verify Cypress installation (optional)
+      - name: Verify Cypress installation
+        run: npx cypress version
+
+      # Run all Cypress tests in cypress/e2e
+      - name: Run Cypress API tests
+        run: npx cypress run --spec "cypress/e2e/*"
